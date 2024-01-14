@@ -1,14 +1,22 @@
 package main
 
 import (
+	"database/sql"
 	"log"
 	"net/http"
 	"os"
 
+	"github.com/bsach64/blogAggregator/internal/database"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
 	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
 )
+
+type apiConfig struct {
+	DB *database.Queries
+}
+
 
 func main() {
 	err := godotenv.Load(".env")
@@ -16,6 +24,13 @@ func main() {
 		log.Fatal("Could not get environment variables..")
 	}
 	port := os.Getenv("PORT")
+	dbURL := os.Getenv("DB")
+
+	db, err := sql.Open("postgres", dbURL)
+
+	dbQueries := database.New(db)
+
+
 	router := chi.NewRouter()
 	handler := cors.Handler(cors.Options{
 		AllowedOrigins:   []string{"https://*", "http://*"},

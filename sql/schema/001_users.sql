@@ -1,6 +1,6 @@
 -- +goose Up
 CREATE TABLE "users" (
-	"id" SERIAL, 
+	"id" UUID, 
 	"created_at" TIMESTAMP NOT NULL,
 	"updated_at" TIMESTAMP NOT NULL,
 	"name" VARCHAR(32) NOT NULL,
