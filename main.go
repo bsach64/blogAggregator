@@ -17,7 +17,6 @@ type apiConfig struct {
 	DB *database.Queries
 }
 
-
 func main() {
 	err := godotenv.Load(".env")
 	if err != nil {
@@ -28,8 +27,9 @@ func main() {
 
 	db, err := sql.Open("postgres", dbURL)
 
-	dbQueries := database.New(db)
-
+	api := apiConfig{
+		DB: database.New(db),
+	}
 
 	router := chi.NewRouter()
 	handler := cors.Handler(cors.Options{
@@ -51,6 +51,11 @@ func main() {
 	routerV1.Get(
 		"/err",
 		handleErr,
+	)
+
+	routerV1.Post(
+		"/users",
+		api.handleCreateUsers,
 	)
 
 	router.Mount("/v1", routerV1)
