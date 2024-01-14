@@ -10,28 +10,38 @@ import (
 	"github.com/joho/godotenv"
 )
 
-
 func main() {
 	err := godotenv.Load(".env")
 	if err != nil {
-		log.Fatal("Could not get environment variables..")	
+		log.Fatal("Could not get environment variables..")
 	}
 	port := os.Getenv("PORT")
-	r := chi.NewRouter()
+	router := chi.NewRouter()
 	handler := cors.Handler(cors.Options{
-		AllowedOrigins: []string{"https://*", "http://*"},
-		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowedHeaders: []string{"*"},
-		ExposedHeaders: []string{"Link"},
+		AllowedOrigins:   []string{"https://*", "http://*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"*"},
+		ExposedHeaders:   []string{"Link"},
 		AllowCredentials: false,
-		MaxAge: 300,
+		MaxAge:           300,
 	})
-	r.Use(handler)
-	rV1 := chi.NewRouter()
-	r.Mount("/v1", rV1)
+	router.Use(handler)
+	routerV1 := chi.NewRouter()
+
+	routerV1.Get(
+		"/readiness",
+		handleReadiness,
+	)
+
+	routerV1.Get(
+		"/err",
+		handleErr,
+	)
+
+	router.Mount("/v1", routerV1)
 	server := &http.Server{
-		Addr: ":" + port,
-		Handler: r,
+		Addr:    ":" + port,
+		Handler: router,
 	}
 	err = server.ListenAndServe()
 	log.Print(err)
