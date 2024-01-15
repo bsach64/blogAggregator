@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/bsach64/blogAggregator/internal/database"
@@ -47,21 +46,10 @@ func (api *apiConfig) handleCreateUsers(w http.ResponseWriter, req *http.Request
 
 }
 
-func (api *apiConfig) handleUserFromApi(w http.ResponseWriter, req *http.Request) {
-	auth := req.Header.Get("Authorization")
-	auth = strings.TrimPrefix(auth, "ApiKey ")
-	data, err := api.DB.GetUserApi(req.Context(), auth)
-	if err != nil {
-		respondWithError(
-			w,
-			http.StatusBadRequest,
-			"User Could not be found or Internal Server Error occured",
-		)
-		return
-	}
+func (api *apiConfig) handleGetUserFromApi(w http.ResponseWriter, req *http.Request, user database.User) {
 	respondWithJSON(
 		w,
 		http.StatusOK,
-		data,
+		user,
 	)
 }

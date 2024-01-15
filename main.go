@@ -60,7 +60,7 @@ func main() {
 
 	routerV1.Get(
 		"/users",
-		api.handleUserFromApi,
+		api.middlewareAuth(api.handleGetUserFromApi),
 	)
 
 	router.Mount("/v1", routerV1)
