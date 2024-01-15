@@ -58,6 +58,11 @@ func main() {
 		api.handleCreateUsers,
 	)
 
+	routerV1.Get(
+		"/users",
+		api.handleUserFromApi,
+	)
+
 	router.Mount("/v1", routerV1)
 	server := &http.Server{
 		Addr:    ":" + port,
