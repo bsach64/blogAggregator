@@ -41,7 +41,7 @@ func (api *apiConfig) handleCreateUsers(w http.ResponseWriter, req *http.Request
 	respondWithJSON(
 		w,
 		http.StatusCreated,
-		user,
+		userFromDatabaseUser(user),
 	)
 
 }

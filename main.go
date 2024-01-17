@@ -63,6 +63,11 @@ func main() {
 		api.middlewareAuth(api.handleGetUserFromApi),
 	)
 
+	routerV1.Post(
+		"/feeds",
+		api.middlewareAuth(api.handleCreateFeed),
+	)
+
 	router.Mount("/v1", routerV1)
 	server := &http.Server{
 		Addr:    ":" + port,
