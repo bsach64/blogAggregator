@@ -55,3 +55,21 @@ func (cfg *apiConfig) handleCreateFeed(w http.ResponseWriter, req *http.Request,
 	)	
 
 }
+
+
+func (cfg *apiConfig) handleGetAllFeeds(w http.ResponseWriter, req *http.Request) {
+	feeds, err := cfg.DB.GetAllFeeds(req.Context())
+	if err != nil {
+		respondWithError(
+			w,
+			http.StatusInternalServerError,
+			err.Error(),
+		)
+		return
+	}
+	respondWithJSON(
+		w,
+		http.StatusOK,
+		feeds,
+	)
+}
