@@ -72,6 +72,12 @@ func main() {
 		"/all_feeds",
 		api.handleGetAllFeeds,
 	)
+	
+	routerV1.Post(
+		"/feed_follows",
+		api.middlewareAuth(api.handleFeedFollow),
+	)
+
 	router.Mount("/v1", routerV1)
 	server := &http.Server{
 		Addr:    ":" + port,

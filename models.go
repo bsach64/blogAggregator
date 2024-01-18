@@ -25,6 +25,14 @@ type User struct {
 	ApiKey    string `json:"api_key"`
 }
 
+type FeedFollow struct {
+	ID        uuid.UUID `json:"id"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	UserID    uuid.UUID `json:"user_id"`
+	FeedID    uuid.UUID `json:"feed_id"`
+}
+
 func userFromDatabaseUser(user database.User) User {
 	return User{
 		ID: user.ID,
