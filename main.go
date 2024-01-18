@@ -78,6 +78,16 @@ func main() {
 		api.middlewareAuth(api.handleFeedFollow),
 	)
 
+	routerV1.Delete(
+		"/feed_follows/{feedfollowID}",
+		api.middlewareAuth(api.handleDeleteFeedFollow),
+	)
+
+	routerV1.Get(
+		"/feed_follows",
+		api.middlewareAuth(api.handleGetFeedFollows),
+	)
+
 	router.Mount("/v1", routerV1)
 	server := &http.Server{
 		Addr:    ":" + port,
