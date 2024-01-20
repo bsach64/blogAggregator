@@ -30,7 +30,7 @@ func main() {
 	api := apiConfig{
 		DB: database.New(db),
 	}
-	
+
 	router := chi.NewRouter()
 	handler := cors.Handler(cors.Options{
 		AllowedOrigins:   []string{"https://*", "http://*"},
@@ -67,12 +67,12 @@ func main() {
 		"/feeds",
 		api.middlewareAuth(api.handleCreateFeed),
 	)
-	
+
 	routerV1.Get(
 		"/all_feeds",
 		api.handleGetAllFeeds,
 	)
-	
+
 	routerV1.Post(
 		"/feed_follows",
 		api.middlewareAuth(api.handleFeedFollow),

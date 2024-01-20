@@ -12,7 +12,7 @@ import (
 func (cfg *apiConfig) handleCreateFeed(w http.ResponseWriter, req *http.Request, user database.User) {
 	type paramaters struct {
 		Name string `json:"name"`
-		Url string `json:"url"`
+		Url  string `json:"url"`
 	}
 
 	decoder := json.NewDecoder(req.Body)
@@ -29,12 +29,12 @@ func (cfg *apiConfig) handleCreateFeed(w http.ResponseWriter, req *http.Request,
 	}
 
 	feed := database.CreateFeedParams{
-		ID: uuid.New(),
+		ID:        uuid.New(),
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
-		UserID: user.ID,
-		Name: params.Name,
-		Url: params.Url,
+		UserID:    user.ID,
+		Name:      params.Name,
+		Url:       params.Url,
 	}
 
 	feedEntry, err := cfg.DB.CreateFeed(req.Context(), feed)
@@ -47,19 +47,18 @@ func (cfg *apiConfig) handleCreateFeed(w http.ResponseWriter, req *http.Request,
 		)
 		return
 	}
-	
+
 	type responseStruct struct {
-		NewFeed Feed `json:"feed"`
+		NewFeed       Feed       `json:"feed"`
 		NewFeedFollow FeedFollow `json:"feed_follow"`
 	}
 
-
 	FeedFollow := database.CreateFeedFollowParams{
-		ID: uuid.New(),
+		ID:        uuid.New(),
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
-		UserID: user.ID,
-		FeedID: feedEntry.ID,
+		UserID:    user.ID,
+		FeedID:    feedEntry.ID,
 	}
 
 	NewFeedFollow, err := cfg.DB.CreateFeedFollow(req.Context(), FeedFollow)
@@ -80,10 +79,9 @@ func (cfg *apiConfig) handleCreateFeed(w http.ResponseWriter, req *http.Request,
 			feedFromDatabaseFeed(feedEntry),
 			feedfollowFromDatabaseFeedFollow(NewFeedFollow),
 		},
-	)	
+	)
 
 }
-
 
 func (cfg *apiConfig) handleGetAllFeeds(w http.ResponseWriter, req *http.Request) {
 	feeds, err := cfg.DB.GetAllFeeds(req.Context())

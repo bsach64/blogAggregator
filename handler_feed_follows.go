@@ -15,7 +15,7 @@ func (cfg *apiConfig) handleFeedFollow(w http.ResponseWriter, req *http.Request,
 	type parameters struct {
 		FeedId uuid.UUID `json:"feed_id"`
 	}
-	
+
 	decoder := json.NewDecoder(req.Body)
 	params := parameters{}
 	err := decoder.Decode(&params)
@@ -27,15 +27,15 @@ func (cfg *apiConfig) handleFeedFollow(w http.ResponseWriter, req *http.Request,
 	}
 
 	createFeedFollow := database.CreateFeedFollowParams{
-		ID: uuid.New(),
+		ID:        uuid.New(),
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
-		UserID: user.ID,
-		FeedID: params.FeedId,
+		UserID:    user.ID,
+		FeedID:    params.FeedId,
 	}
 
 	feedFollow, err := cfg.DB.CreateFeedFollow(req.Context(), createFeedFollow)
-	
+
 	if err != nil {
 		respondWithError(
 			w,
@@ -54,7 +54,7 @@ func (cfg *apiConfig) handleFeedFollow(w http.ResponseWriter, req *http.Request,
 
 func (cfg *apiConfig) handleDeleteFeedFollow(w http.ResponseWriter, req *http.Request, user database.User) {
 	feedIDStr := chi.URLParam(req, "feedfollowID")
-	
+
 	feedID, err := uuid.Parse(feedIDStr)
 	if err != nil {
 		respondWithError(
@@ -66,7 +66,7 @@ func (cfg *apiConfig) handleDeleteFeedFollow(w http.ResponseWriter, req *http.Re
 
 	deleteParms := database.DeleteFeedFollowParams{
 		UserID: user.ID,
-		ID: feedID,
+		ID:     feedID,
 	}
 
 	err = cfg.DB.DeleteFeedFollow(req.Context(), deleteParms)
@@ -79,7 +79,6 @@ func (cfg *apiConfig) handleDeleteFeedFollow(w http.ResponseWriter, req *http.Re
 	}
 	respondWithJSON(w, http.StatusOK, struct{}{})
 }
-
 
 func (cfg *apiConfig) handleGetFeedFollows(w http.ResponseWriter, req *http.Request, user database.User) {
 	feeds, err := cfg.DB.AllFeedFollows(req.Context(), user.ID)
