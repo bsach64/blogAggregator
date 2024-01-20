@@ -48,7 +48,7 @@ func (cfg *apiConfig) handleFeedFollow(w http.ResponseWriter, req *http.Request,
 	respondWithJSON(
 		w,
 		http.StatusCreated,
-		FeedFollow(feedFollow),
+		feedfollowFromDatabaseFeedFollow(feedFollow),
 	)
 }
 

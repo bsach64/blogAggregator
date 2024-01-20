@@ -48,10 +48,38 @@ func (cfg *apiConfig) handleCreateFeed(w http.ResponseWriter, req *http.Request,
 		return
 	}
 	
+	type responseStruct struct {
+		NewFeed Feed `json:"feed"`
+		NewFeedFollow FeedFollow `json:"feed_follow"`
+	}
+
+
+	FeedFollow := database.CreateFeedFollowParams{
+		ID: uuid.New(),
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+		UserID: user.ID,
+		FeedID: feedEntry.ID,
+	}
+
+	NewFeedFollow, err := cfg.DB.CreateFeedFollow(req.Context(), FeedFollow)
+
+	if err != nil {
+		respondWithError(
+			w,
+			http.StatusInternalServerError,
+			err.Error(),
+		)
+		return
+	}
+
 	respondWithJSON(
 		w,
 		http.StatusCreated,
-		feedFromDatabaseFeed(feedEntry),
+		responseStruct{
+			feedFromDatabaseFeed(feedEntry),
+			feedfollowFromDatabaseFeedFollow(NewFeedFollow),
+		},
 	)	
 
 }
@@ -67,9 +95,15 @@ func (cfg *apiConfig) handleGetAllFeeds(w http.ResponseWriter, req *http.Request
 		)
 		return
 	}
+
+	fs := make([]Feed, 0)
+	for _, f := range feeds {
+		fs = append(fs, feedFromDatabaseFeed(f))
+	}
+
 	respondWithJSON(
 		w,
 		http.StatusOK,
-		feeds,
+		fs,
 	)
 }

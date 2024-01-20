@@ -15,6 +15,7 @@ type Feed struct {
 	Name      string `json:"name"`
 	Url       string `json:"url"`
 	UserID    uuid.UUID `json:"user_id"`
+	LastFetchedAt *time.Time `json:"last_fetched_at"`
 }
 
 type User struct {
@@ -44,7 +45,7 @@ func userFromDatabaseUser(user database.User) User {
 }
 
 func feedFromDatabaseFeed(feed database.Feed) Feed {
-	return Feed{
+	f := Feed{
 		ID: feed.ID,
 		CreatedAt: feed.CreatedAt,
 		UpdatedAt: feed.UpdatedAt,
@@ -52,4 +53,24 @@ func feedFromDatabaseFeed(feed database.Feed) Feed {
 		UserID: feed.UserID,
 		Url: feed.Url,
 	}
+	
+	var t *time.Time
+	if feed.LastFetchedAt.Valid {
+		t = &feed.LastFetchedAt.Time
+	} else {
+		t = nil
+	}
+	f.LastFetchedAt = t
+	return f
 }
+
+func feedfollowFromDatabaseFeedFollow(feedfollow database.FeedFollow) FeedFollow {
+	return FeedFollow{
+		ID: feedfollow.ID,
+		CreatedAt: feedfollow.CreatedAt,
+		UpdatedAt: feedfollow.UpdatedAt,
+		UserID: feedfollow.UserID,
+		FeedID: feedfollow.FeedID,
+	}
+
+} 

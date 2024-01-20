@@ -5,3 +5,11 @@ RETURNING *;
 
 -- name: GetAllFeeds :many
 SELECT * FROM feeds;
+
+-- name: GetNextFeedsToFetch :many
+SELECT * FROM feeds ORDER BY last_fetched_at DESC;
+
+-- name: MarkFeedFetched :exec
+UPDATE feeds 
+SET updated_at = CURRENT_TIME, last_fetched_at = CURRENT_TIME
+WHERE id = $1;
