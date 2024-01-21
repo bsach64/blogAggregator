@@ -53,17 +53,17 @@ func scrapeFeed(db *database.Queries, wg *sync.WaitGroup, feed database.Feed) {
 	}
 	for _, entry := range rss.Channel.Item {
 		postParams := database.CreatePostParams{
-			ID: uuid.New(),
+			ID:        uuid.New(),
 			CreatedAt: time.Now(),
 			UpdatedAt: time.Now(),
-			Title: entry.Title,
-			Url: entry.Link,
-			FeedID: feed.ID,
+			Title:     entry.Title,
+			Url:       entry.Link,
+			FeedID:    feed.ID,
 		}
 		if entry.Description != "" {
 			postParams.Description = sql.NullString{
 				String: entry.Description,
-				Valid: true,
+				Valid:  true,
 			}
 		}
 		t, err := time.Parse(time.RFC1123Z, entry.PubDate)
