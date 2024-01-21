@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/bsach64/blogAggregator/internal/database"
 	"github.com/go-chi/chi/v5"
@@ -27,10 +28,12 @@ func main() {
 
 	db, err := sql.Open("postgres", dbURL)
 
+	dbc := database.New(db)
 	api := apiConfig{
-		DB: database.New(db),
+		DB: dbc,
 	}
 
+	go startScraping(dbc, 10, time.Minute)
 	router := chi.NewRouter()
 	handler := cors.Handler(cors.Options{
 		AllowedOrigins:   []string{"https://*", "http://*"},
