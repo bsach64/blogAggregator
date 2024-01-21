@@ -9,7 +9,7 @@ import (
 
 func (cfg *apiConfig) handleGetPosts(w http.ResponseWriter, req *http.Request, user database.User) {
 	queries := req.URL.Query()
-	
+
 	dbPosts, err := cfg.DB.GetPostsbyUser(req.Context(), user.ID)
 	if err != nil {
 		respondWithError(
@@ -22,10 +22,10 @@ func (cfg *apiConfig) handleGetPosts(w http.ResponseWriter, req *http.Request, u
 	for _, p := range dbPosts {
 		posts = append(posts, postFromDatabasePost(p))
 	}
-	
+
 	limit, err := strconv.Atoi(queries.Get("limit"))
 	if err != nil {
-		limit = len(posts)	
+		limit = len(posts)
 	}
 	respondWithJSON(
 		w,
